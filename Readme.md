@@ -1,6 +1,15 @@
 # Docker for Quac
 Adam Lyon, July 2020
 
+## Easy getting started
+
+To get started quickly without cloning this whole repository, you can simply download the [compose/docker-compose.yml]([compose/docker-compose.yml](https://raw.githubusercontent.com/Fermilab-Quantum-Science/quac-docker/master/compose/docker-compose.yml)) file to a directory. Then, from that directory, run the command 
+```
+docker-compose run --rm quac /bin/bash
+```
+
+That should download the image from Docker Hub (may take awhile) if you don't already have it. 
+
 ## Introduction
 
 Docker is useful easily installing libraries and packages. In this case, we use a docker installation for `QuaC` and its dependencies, namely `python`, `PetSc` and `SLEPc`. Furthermore, a mini-conda installation of `python` is included with `Jupyter`.
