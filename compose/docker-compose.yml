@@ -1,0 +1,72 @@
+# docker-compose file for quac and quac-vnc.
+# You need to have Quac or hep_quac checked out locally
+#
+# This file is meant for a Mac where you are nfs exporting your /Users directory.
+# See https://github.com/lyon-fnal/devenv/blob/master/README.md#prepare-nfs for how to set that up
+#
+# The `quac` service is suitable for pycharm and its docker-compose integration
+#
+# To run a command in perhaps ephemeral quac container, do, for example
+# docker-compose run --rm quac /bin/bash
+# docker-compose run --rm -w /Users/lyon/Development/Quantum/Quac/hep_quac quac python run_vqe.py
+# docker-compose run --rm -w /Users/lyon/Development/Quantum/Quac/hep_quac --service-ports quac jupyter lab \
+#                                                                               --ip=0.0.0.0 --allow-root --no-browser
+
+
+#
+# If you want to run the VNC service, do
+# docker-compose up -d quac-vnc
+#  and then connect the Mac "Screen Sharing" app to localhost:5901
+
+version: '3.7'
+
+# Definitions
+x-worker: &default-worker
+    hostname: quac
+    security_opt: # options needed for gdb debugging
+      - seccomp:unconfined
+      - apparmor:unconfined
+    cap_add:      # also needed for gdb
+      - SYS_PTRACE
+    ports:
+      - "127.0.0.1:7778:7777"   # gdb
+      - "127.0.0.1:5902:5901"   # VNC
+      - "127.0.0.1:8888:8888"   # Jupyter
+    environment:
+      - DISPLAY=docker.for.mac.localhost:0
+    volumes:
+      - slash_root_quac:/root
+      - workdir_quac:/Users
+
+# Services
+services:
+  quac-deps:
+    image: quac_deps:3.13
+    <<: *default-worker
+
+  quac-deps-julia:
+    image: quac_deps_julia:3.13
+    <<: *default-worker
+
+  quac:
+    image: lyonfnal/quac:diagonalize
+    <<: *default-worker
+
+  #quac-vnc:
+  #  image: quac_deps_vnc
+  #  <<: *default-worker
+
+# Volumes
+
+volumes:
+
+    # Mount the Mac /Users directory with NFS
+    workdir_quac:
+        driver: local
+        driver_opts:
+            type: nfs
+            o: addr=host.docker.internal,rw,nolock,hard,nointr,nfsvers=3
+            device: ":/System/Volumes/Data/Users"
+
+    slash_root_quac:
+      external: true
