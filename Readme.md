@@ -57,3 +57,29 @@ docker-compose run --rm -w <YOUR_DIRECTORY> --service-ports quac jupyter lab --i
 ```
 
 Note that any changes you make in the `/quac` directory (e.g. to QuaC itself or its dependencies) will **not** be retained if stop and re-start the container. Your code should be in a volume that is mounted into the container (the `/root` directory is retained, so you can put stuff there - or somewhere in `/Users`).  If you want to make changes to QuaC itself, then you should clone QuaC to a mounted volume and build the dependency image and run that. 
+
+## Building your code against QuaC
+
+QuaC doesn't use libraries, so to build your application against QuaC, you need a `Makefile` with the right stuff. The [example](example/) directory has a sample application (from the QuaC example directory) and such a `Makefile`. Here is what you can do...
+
+```
+# Start the quac container. All commands are from within that container. 
+# Make your browser window wide to see the whole line
+cd /root   # Go to home area
+mkdir myQuac ; cd myQuac   # Make a new directory
+
+# Download the Makefile and sample application source code from Github
+wget https://raw.githubusercontent.com/Fermilab-Quantum-Science/quac-docker/master/example/Makefile
+wget https://raw.githubusercontent.com/Fermilab-Quantum-Science/quac-docker/master/example/simple_circuit.c
+
+# Make an obj directory to store object files
+mkdir obj
+
+# Build
+make simple_circuit
+
+# Try it
+./simple_circuit
+```
+
+To build your own application, look in [example/Makefile](example/Makefile) and replace `simple_circuit` with the name of your application and make the necessary alterations to the instructions above. 
