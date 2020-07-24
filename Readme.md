@@ -3,7 +3,7 @@ Adam Lyon, July 2020
 
 ## Easy getting started
 
-To get started quickly without cloning this whole repository, you can simply download the [compose/docker-compose.yml]([compose/docker-compose.yml](https://raw.githubusercontent.com/Fermilab-Quantum-Science/quac-docker/master/compose/docker-compose.yml)) file to a directory. Then, from that directory, run the command 
+To get started quickly without cloning this whole repository, you can simply download the [compose/docker-compose.yml]([compose/docker-compose.yml](https://raw.githubusercontent.com/Fermilab-Quantum-Science/quac-docker/master/compose/docker-compose.yml) file to a directory. Then, from that directory, run the command 
 ```
 docker-compose run --rm quac /bin/bash
 ```
